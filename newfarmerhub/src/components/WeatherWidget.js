@@ -1,14 +1,12 @@
 import { useState, useEffect } from 'react';
 
-import { 
-  WiDaySunny, WiRain, WiCloudy, WiDayCloudy, WiThunderstorm 
-} from 'react-icons/wi';
+import { WiDaySunny, WiRain, WiCloudy, WiDayCloudy, WiThunderstorm } from 'react-icons/wi';
 
 import { Card, Row, Col, Spinner, Button } from 'react-bootstrap';
 
 import axios from 'axios';
 
-const API_KEY = '7a2b1b41ab2bf87588194671196ccd6d'; // Your OpenWeatherMap API
+const API_KEY = '7a2b1b41ab2bf87588194671196ccd6d'; // Your OpenWeatherMap API key
 
 const WeatherWidget = () => {
   const [weather, setWeather] = useState(null);
@@ -18,7 +16,6 @@ const WeatherWidget = () => {
   useEffect(() => {
     const savedData = localStorage.getItem('weatherData');
     const savedTime = localStorage.getItem('weatherTime');
-
     const isRecent = savedTime && (Date.now() - parseInt(savedTime) < 60 * 60 * 1000); // within 1 hour
 
     if (savedData && isRecent) {
@@ -34,12 +31,10 @@ const WeatherWidget = () => {
   const fetchWeather = async () => {
     setLoading(true);
     try {
-      // 1. Get current location
       navigator.geolocation.getCurrentPosition(async (pos) => {
         const { latitude, longitude } = pos.coords;
         await fetchWeatherData(latitude, longitude);
       }, async () => {
-        // 2. Fallback: Dodoma if location denied
         const defaultLat = -6.1731;
         const defaultLon = 35.741;
         await fetchWeatherData(defaultLat, defaultLon);
@@ -56,11 +51,9 @@ const WeatherWidget = () => {
       const url = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&units=metric&appid=${API_KEY}`;
       const response = await axios.get(url);
 
-      // Get current weather from the first item
       const today = response.data.list[0];
       const city = response.data.city.name + ", " + response.data.city.country;
 
-      // Extract 5-day forecast from 3-hour data (one per day)
       const daily = [];
       const seen = new Set();
 
@@ -87,8 +80,6 @@ const WeatherWidget = () => {
 
       setWeather(weatherData);
       setLocationName(city);
-
-      // Save to localStorage here AFTER data is ready
       localStorage.setItem('weatherData', JSON.stringify({ weather: weatherData, location: city }));
       localStorage.setItem('weatherTime', Date.now().toString());
 
@@ -110,16 +101,25 @@ const WeatherWidget = () => {
   };
 
   return (
-    <Card className="weather-card text-white bg-dark p-3">
+    <Card
+      className="text-white p-3 shadow"
+      style={{
+        backgroundColor: 'rgba(31, 15, 15, 0.6)',
+        border: '1px solid rgba(255, 255, 255, 0.2)',
+        borderRadius: '12px'
+      }}
+    >
       <Card.Body>
-        <Row className="justify-content-between align-items-center">
-          <Card.Title className="mb-3">🌤️ Weather Forecast</Card.Title>
-          <Button variant="light" size="sm" onClick={fetchWeather}>🔁 Refresh</Button>
+        <Row className="justify-content-between align-items-center mb-3">
+          <Card.Title className="mb-0">🌤️ Weather Forecast</Card.Title>
+          <Button variant="outline-light" size="sm" onClick={fetchWeather}>
+            🔁 Refresh
+          </Button>
         </Row>
 
         {loading ? (
           <div className="text-center py-4">
-            <Spinner animation="border" />
+            <Spinner animation="border" variant="light" />
           </div>
         ) : (
           <>
@@ -129,16 +129,16 @@ const WeatherWidget = () => {
               </Col>
               <Col>
                 <div className="display-4">{weather?.temp}°C</div>
-                <div style={{ textTransform: 'capitalize' }}>{weather?.condition}</div>
+                <div style={{ textTransform: 'capitalize', color: '#f1f1f1' }}>{weather?.condition}</div>
               </Col>
               <Col>
-                <div>💧 Humidity: {weather?.humidity}%</div>
-                <div>🌬️ Wind: {weather?.wind} km/h</div>
-                <div>📍 {locationName}</div>
+                <div style={{ color: '#ddd' }}>💧 Humidity: {weather?.humidity}%</div>
+                <div style={{ color: '#ddd' }}>🌬️ Wind: {weather?.wind} km/h</div>
+                <div style={{ color: '#ccc' }}>📍 {locationName}</div>
               </Col>
             </Row>
 
-            <Row className="text-center">
+            <Row className="text-center text-light">
               {weather?.forecast.map((day, index) => (
                 <Col key={index}>
                   <div>{day.day}</div>

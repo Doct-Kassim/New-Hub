@@ -36,3 +36,11 @@
     transform: rotate(360deg);
   }
 }
+
+
+
+.weather-card {
+  background-color: transparent !important;
+  box-shadow: none;
+  border: none;
+}

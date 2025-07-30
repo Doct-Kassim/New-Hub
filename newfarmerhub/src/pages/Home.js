@@ -4,6 +4,8 @@ import { Container, Row, Col, Button, Card, Carousel } from 'react-bootstrap';
 
 import { Link } from 'react-router-dom';
 
+import { FaCloudSun, FaComments, FaChartBar, FaTractor, FaSeedling, FaBug } from 'react-icons/fa';
+
 import './Home.css';
 
 const carouselImages = [
@@ -40,7 +42,7 @@ const carouselImages = [
 const Home = () => {
   return (
     <div className="home-page">
-      {/* Hero Section - Unchanged */}
+      {/* Hero Section */}
       <section className="hero-section bg-primary text-white py-5">
         <Container>
           <Row className="align-items-center">
@@ -59,6 +61,7 @@ const Home = () => {
               </Button>
             </Col>
             <Col md={6}>
+          
               <img 
                 src="/images/farmer-hero.png"
                 alt="Farmer"
@@ -70,7 +73,7 @@ const Home = () => {
         </Container>
       </section>
 
-      {/* Carousel Section - Updated sizing */}
+      {/* Carousel Section */}
       <section className="carousel-section py-4">
         <Container fluid="xxl" className="px-0 mx-auto">
           <Carousel fade interval={3000} pause={false}>
@@ -103,15 +106,16 @@ const Home = () => {
         </Container>
       </section>
 
-      {/* Features Section - Unchanged */}
+      {/* Features Section */}
       <section className="features-section py-5">
         <Container>
-          <h2 className="text-center mb-4">Vitu Unavyoweza Kufanya</h2>
+          <h2 className="text-center mb-4">Vitu Unavyoweza Kufanya<br />(huduma zetu)</h2>
           <Row>
             <Col md={4} className="mb-4">
-              <Card className="h-100">
+              <Card className="h-100 text-center">
                 <Card.Body>
-                  <Card.Title>⛅ Hali ya Hewa</Card.Title>
+                  <FaCloudSun size={40} className="mb-2 text-warning" />
+                  <Card.Title>Hali ya Hewa</Card.Title>
                   <Card.Text>
                     Pata habari za hali ya hewa kwa eneo lako kwa siku 7 zijazo.
                   </Card.Text>
@@ -119,9 +123,10 @@ const Home = () => {
               </Card>
             </Col>
             <Col md={4} className="mb-4">
-              <Card className="h-100">
+              <Card className="h-100 text-center">
                 <Card.Body>
-                  <Card.Title>💬 Forum</Card.Title>
+                  <FaComments size={40} className="mb-2 text-primary" />
+                  <Card.Title>Forum</Card.Title>
                   <Card.Text>
                     Shiriki maswali na majibu na wakulima wenzako.
                   </Card.Text>
@@ -129,11 +134,45 @@ const Home = () => {
               </Card>
             </Col>
             <Col md={4} className="mb-4">
-              <Card className="h-100">
+              <Card className="h-100 text-center">
                 <Card.Body>
-                  <Card.Title>📊 Bei za Soko</Card.Title>
+                  <FaChartBar size={40} className="mb-2 text-info" />
+                  <Card.Title>Bei za Soko</Card.Title>
                   <Card.Text>
                     Fahamu bei za mazao kwa sasa kutoka kwenye soko mbalimbali.
+                  </Card.Text>
+                </Card.Body>
+              </Card>
+            </Col>
+            <Col md={4} className="mb-4">
+              <Card className="h-100 text-center">
+                <Card.Body>
+                  <FaTractor size={40} className="mb-2 text-danger" />
+                  <Card.Title>Elimu ya Ufugaji</Card.Title>
+                  <Card.Text>
+                    Jifunze zaidi mbinu na utaalamu wa ufugaji wa kisasa.
+                  </Card.Text>
+                </Card.Body>
+              </Card>
+            </Col>
+            <Col md={4} className="mb-4">
+              <Card className="h-100 text-center">
+                <Card.Body>
+                  <FaSeedling size={40} className="mb-2 text-success" />
+                  <Card.Title>Kilimo</Card.Title>
+                  <Card.Text>
+                    Fahamu zaidi kuhusu kilimo na jinsi ya kukabiliana na changamoto zake.
+                  </Card.Text>
+                </Card.Body>
+              </Card>
+            </Col>
+            <Col md={4} className="mb-4">
+              <Card className="h-100 text-center">
+                <Card.Body>
+                  <FaBug size={40} className="mb-2 text-dark" />
+                  <Card.Title>Pests and Diseases</Card.Title>
+                  <Card.Text>
+                    Zijue mbinu na tiba mbalimbali za kudhibiti magonjwa ya mimea na wanyama.
                   </Card.Text>
                 </Card.Body>
               </Card>

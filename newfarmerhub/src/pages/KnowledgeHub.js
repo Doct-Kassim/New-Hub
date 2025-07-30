@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 
-import { Container, Form, Row, Col } from 'react-bootstrap';
+import { Container, Row, Col, Form } from 'react-bootstrap';
 
 import KnowledgeCard from '../components/KnowledgeCard';
 
@@ -8,55 +8,56 @@ const KnowledgeHub = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [category, setCategory] = useState('');
 
-  // Mock data
   const knowledgeItems = [
     {
       id: 1,
-      title: 'Maize Farming Techniques',
+      title: 'Best Maize Planting Practices',
       category: 'Crops',
-      description: 'Best practices for high-yield maize farming in East Africa',
-      expert: 'Dr. Agricultural Expert',
-      date: '2023-05-15'
+      description: 'Learn how to plant maize for better yield.',
+      expert: 'Agriculture Expert',
+      date: '2023-07-30',
     },
     {
       id: 2,
-      title: 'Dairy Cattle Management',
+      title: 'Dairy Cow Management',
       category: 'Livestock',
-      description: 'Comprehensive guide to modern dairy farming methods',
+      description: 'Feeding and care for your dairy cows.',
       expert: 'Livestock Specialist',
-      date: '2023-06-20'
+      date: '2023-07-29',
     },
     {
       id: 3,
-      title: 'Tomato Blight Prevention',
+      title: 'Pest Control in Tomatoes',
       category: 'Diseases',
-      description: 'How to identify and prevent tomato blight in your farm',
+      description: 'How to identify and control tomato pests.',
       expert: 'Plant Pathologist',
-      date: '2023-04-10'
-    }
+      date: '2023-07-28',
+    },
   ];
 
-  const filteredItems = knowledgeItems.filter(item => {
-    const matchesSearch = item.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
-                         item.description.toLowerCase().includes(searchTerm.toLowerCase());
+  const filteredItems = knowledgeItems.filter((item) => {
+    const matchesSearch =
+      item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      item.description.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesCategory = category === '' || item.category === category;
     return matchesSearch && matchesCategory;
   });
 
   return (
-    <Container>
+    <Container className="mt-4">
       <h2 className="mb-4">Knowledge Hub</h2>
+
       <Row className="mb-4">
         <Col md={8}>
-          <Form.Control 
-            type="text" 
-            placeholder="Search knowledge base..." 
+          <Form.Control
+            type="text"
+            placeholder="Search knowledge base..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
         </Col>
         <Col md={4}>
-          <Form.Select 
+          <Form.Select
             value={category}
             onChange={(e) => setCategory(e.target.value)}
           >
@@ -67,12 +68,17 @@ const KnowledgeHub = () => {
           </Form.Select>
         </Col>
       </Row>
+
       <Row xs={1} md={2} lg={3} className="g-4">
-        {filteredItems.map(item => (
-          <Col key={item.id}>
-            <KnowledgeCard item={item} />
-          </Col>
-        ))}
+        {filteredItems.length > 0 ? (
+          filteredItems.map((item) => (
+            <Col key={item.id}>
+              <KnowledgeCard item={item} />
+            </Col>
+          ))
+        ) : (
+          <p>No knowledge items found matching your criteria.</p>
+        )}
       </Row>
     </Container>
   );

@@ -1,7 +1,7 @@
 // Header.js
 import React from 'react';
 
-import { FaBars } from 'react-icons/fa';
+import { FaBars, FaLeaf } from 'react-icons/fa';
 
 import { Navbar, Container } from 'react-bootstrap';
 
@@ -12,7 +12,11 @@ const Header = ({ onToggleSidebar }) => {
         <button className="btn btn-dark me-3" onClick={onToggleSidebar}>
           <FaBars />
         </button>
-        <Navbar.Brand href="/">FarmerHub</Navbar.Brand>
+
+        <Navbar.Brand href="/" className="d-flex align-items-center">
+          <FaLeaf size={24} className="me-2 text-success" />
+          <span className="fw-bold">FarmerHub</span>
+        </Navbar.Brand>
       </Container>
     </Navbar>
   );
