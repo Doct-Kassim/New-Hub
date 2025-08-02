@@ -1,0 +1,14 @@
+/* src/pages/MarketPriceView.css
+
+.market-price-view-container {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  overflow: hidden;
+}
+
+iframe {
+  flex-grow: 1;
+  overflow: hidden;
+} */
