@@ -1,28 +1,27 @@
-// src/pages/LivestockDetail.js
+// src/pages/DiseaseDetail.js
 import React, { useEffect, useState } from 'react';
 
 import { useParams, useNavigate } from 'react-router-dom';
 
-const LivestockDetail = () => {
+const DiseaseDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [livestock, setLivestock] = useState(null);
+  const [disease, setDisease] = useState(null);
 
   useEffect(() => {
-    const storedLivestock = JSON.parse(localStorage.getItem('livestockData')) || [];
-    const selectedLivestock = storedLivestock[parseInt(id)];
-    if (selectedLivestock) {
-      setLivestock(selectedLivestock);
+    const stored = JSON.parse(localStorage.getItem('diseaseData')) || [];
+    const selected = stored[parseInt(id)];
+    if (selected) {
+      setDisease(selected);
     } else {
-      navigate('/livestock');
+      navigate('/diseases');
     }
   }, [id, navigate]);
 
-  if (!livestock) return null;
+  if (!disease) return null;
 
   return (
     <div style={{ padding: 0, margin: 0, width: '100%' }}>
-      {/* Back button */}
       <button
         onClick={() => navigate(-1)}
         style={{
@@ -39,19 +38,17 @@ const LivestockDetail = () => {
         ← Back
       </button>
 
-      {/* Title */}
       <h1
         style={{
           textAlign: 'center',
           marginTop: '60px',
           fontWeight: 'bold',
-          color: '#007bff',
+          color: '#dc3545',
         }}
       >
-        {livestock.title}
+        {disease.title}
       </h1>
 
-      {/* Description only (image removed) */}
       <div
         style={{
           width: '100%',
@@ -60,10 +57,10 @@ const LivestockDetail = () => {
           lineHeight: '1.6',
           padding: '10px 20px',
         }}
-        dangerouslySetInnerHTML={{ __html: livestock.description }}
+        dangerouslySetInnerHTML={{ __html: disease.description }}
       />
     </div>
   );
 };
 
-export default LivestockDetail;
+export default DiseaseDetail;

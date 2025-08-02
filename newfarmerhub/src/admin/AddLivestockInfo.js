@@ -1,3 +1,4 @@
+// src/pages/AddLivestockInfo.js
 import React, { useState, useEffect } from 'react';
 
 import ReactQuill from 'react-quill';
@@ -9,12 +10,12 @@ const AddLivestockInfo = () => {
   const [title, setTitle] = useState('');
   const [image, setImage] = useState('');
   const [description, setDescription] = useState('');
-  const [infos, setInfos] = useState([]);
+  const [livestockList, setLivestockList] = useState([]);
   const [editIndex, setEditIndex] = useState(null);
 
   useEffect(() => {
-    const stored = JSON.parse(localStorage.getItem('livestockInfo')) || [];
-    setInfos(stored);
+    const stored = JSON.parse(localStorage.getItem('livestockData')) || [];
+    setLivestockList(stored);
   }, []);
 
   const handleImageChange = (e) => {
@@ -30,14 +31,19 @@ const AddLivestockInfo = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const newInfo = { title, image, description };
+    const newItem = { title, image, description };
 
-    const updated = editIndex !== null
-      ? infos.map((info, i) => i === editIndex ? newInfo : info)
-      : [...infos, newInfo];
+    let updatedList = [];
+    if (editIndex !== null) {
+      updatedList = livestockList.map((item, index) =>
+        index === editIndex ? newItem : item
+      );
+    } else {
+      updatedList = [...livestockList, newItem];
+    }
 
-    localStorage.setItem('livestockInfo', JSON.stringify(updated));
-    setInfos(updated);
+    localStorage.setItem('livestockData', JSON.stringify(updatedList));
+    setLivestockList(updatedList);
     setTitle('');
     setImage('');
     setDescription('');
@@ -45,36 +51,38 @@ const AddLivestockInfo = () => {
   };
 
   const handleEdit = (index) => {
-    const info = infos[index];
-    setTitle(info.title);
-    setImage(info.image);
-    setDescription(info.description);
+    const item = livestockList[index];
+    setTitle(item.title);
+    setImage(item.image);
+    setDescription(item.description);
     setEditIndex(index);
   };
 
   const handleDelete = (index) => {
-    const filtered = infos.filter((_, i) => i !== index);
-    localStorage.setItem('livestockInfo', JSON.stringify(filtered));
-    setInfos(filtered);
-    setTitle('');
-    setImage('');
-    setDescription('');
-    setEditIndex(null);
+    const filtered = livestockList.filter((_, i) => i !== index);
+    localStorage.setItem('livestockData', JSON.stringify(filtered));
+    setLivestockList(filtered);
+    if (editIndex === index) {
+      setTitle('');
+      setImage('');
+      setDescription('');
+      setEditIndex(null);
+    }
   };
 
   const modules = {
     toolbar: [
-      [{ font: [] }],
+      [{ font: ['arial', 'times-new-roman', 'calibri', 'georgia'] }],
       [{ header: [1, 2, 3, false] }],
-      ['bold', 'italic', 'underline'],
+      ['bold', 'italic', 'underline', 'strike'],
       [{ list: 'ordered' }, { list: 'bullet' }],
       ['link', 'image', 'video'],
-      ['clean']
+      ['clean'],
     ],
   };
 
   const formats = [
-    'header', 'font', 'bold', 'italic', 'underline',
+    'header', 'font', 'bold', 'italic', 'underline', 'strike',
     'list', 'bullet', 'link', 'image', 'video'
   ];
 
@@ -82,20 +90,24 @@ const AddLivestockInfo = () => {
     <Container className="mt-4">
       <Card>
         <Card.Body>
-          <h3 className="mb-4">{editIndex !== null ? 'Edit Livestock Info' : 'Add Livestock Info'}</h3>
+          <h3 className="mb-4">
+            {editIndex !== null ? 'Edit Livestock Info' : 'Add Livestock Info'}
+          </h3>
 
           <Form onSubmit={handleSubmit}>
+            {/* Title */}
             <Form.Group className="mb-3">
               <Form.Label>Title</Form.Label>
               <Form.Control
                 type="text"
+                placeholder="Enter livestock title..."
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                placeholder="Enter livestock title"
                 required
               />
             </Form.Group>
 
+            {/* Image */}
             <Form.Group className="mb-3">
               <Form.Label>Upload Image</Form.Label>
               <Form.Control
@@ -106,11 +118,16 @@ const AddLivestockInfo = () => {
               />
               {image && (
                 <div className="mt-2">
-                  <img src={image} alt="preview" style={{ width: '90px', borderRadius: '6px' }} />
+                  <img
+                    src={image}
+                    alt="Preview"
+                    style={{ width: '90px', height: 'auto', borderRadius: '6px' }}
+                  />
                 </div>
               )}
             </Form.Group>
 
+            {/* Description */}
             <Form.Group className="mb-4">
               <Form.Label>Description</Form.Label>
               <ReactQuill
@@ -124,7 +141,7 @@ const AddLivestockInfo = () => {
             </Form.Group>
 
             <div className="d-grid">
-              <Button type="submit" variant={editIndex !== null ? 'primary' : 'success'}>
+              <Button variant={editIndex !== null ? 'primary' : 'success'} type="submit">
                 {editIndex !== null ? 'Update Info' : 'Save Info'}
               </Button>
             </div>
@@ -132,33 +149,49 @@ const AddLivestockInfo = () => {
         </Card.Body>
       </Card>
 
-      <h4 className="mt-5">Saved Livestock Info</h4>
+      {/* Display Livestock Info */}
+      <h4 className="mt-5">Saved Livestock Information</h4>
       <Row>
-        {infos.map((info, index) => (
+        {livestockList.map((item, index) => (
           <Col md={6} key={index} className="mb-4">
-            <Card>
-              <Card.Img
-                variant="top"
-                src={info.image}
-                style={{
-                  height: '160px',
-                  width: '100%',
-                  objectFit: 'cover',
-                  borderTopLeftRadius: '6px',
-                  borderTopRightRadius: '6px',
-                }}
-              />
+            <Card className="h-100">
+              <div style={{ padding: 0 }}>
+                <Card.Img
+                  variant="top"
+                  src={item.image}
+                  style={{
+                    height: '160px',
+                    width: '100%',
+                    objectFit: 'cover',
+                    borderTopLeftRadius: '6px',
+                    borderTopRightRadius: '6px',
+                    margin: 0,
+                  }}
+                />
+              </div>
               <Card.Body>
-                <Card.Title>{info.title}</Card.Title>
+                <Card.Title>{item.title}</Card.Title>
                 <div
                   className="mb-2"
-                  dangerouslySetInnerHTML={{ __html: info.description }}
-                  style={{ maxHeight: '120px', overflowY: 'auto' }}
+                  dangerouslySetInnerHTML={{ __html: item.description }}
+                  style={{
+                    maxHeight: '120px',
+                    overflowY: 'auto',
+                  }}
                 />
-                <Button size="sm" className="me-2" onClick={() => handleEdit(index)} variant="outline-primary">
+                <Button
+                  variant="outline-primary"
+                  size="sm"
+                  className="me-2"
+                  onClick={() => handleEdit(index)}
+                >
                   Edit
                 </Button>
-                <Button size="sm" onClick={() => handleDelete(index)} variant="outline-danger">
+                <Button
+                  variant="outline-danger"
+                  size="sm"
+                  onClick={() => handleDelete(index)}
+                >
                   Delete
                 </Button>
               </Card.Body>

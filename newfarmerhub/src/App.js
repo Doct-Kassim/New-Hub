@@ -26,6 +26,7 @@ import LivestockKnowledge from './components/LivestockKnowledge';
 import Sidebar from './components/Sidebar';
 import CropDetails from './pages/CropDetails';
 import Dashboard from './pages/Dashboard';
+import DiseaseDetail from './pages/DiseaseDetail';
 import Forum from './pages/Forum';
 import Home from './pages/Home';
 import KnowledgeHub from './pages/KnowledgeHub';
@@ -90,6 +91,7 @@ function FarmerLayout() {
             <Route path="/" element={<Home />} />
             <Route path="/crop/:id" element={<CropDetails />} />
             <Route path="/Livestock/:id" element={<LivestockDetail />} />
+            <Route path="/disease/:id" element={<DiseaseDetail />} />
            
           </Routes>
         </div>
