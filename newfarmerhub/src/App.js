@@ -8,64 +8,45 @@ import {
   Route,
   Navigate,
   useLocation,
+  Outlet,
 } from 'react-router-dom';
 
+import AddCropTechnique from './admin/AddCropTechnique';
+import AddLivestockInfo from './admin/AddLivestockInfo';
+import AddMarketPrice from './admin/AddMarketPrice';
+import AddPestDiseaseControl from './admin/AddPestDiseaseControl';
+import AddTrainingTutorials from './admin/AddTrainingTutorials';
+import AdminDashboard from './admin/AdminDashboard';
+import AdminLayout from './admin/AdminLayout';
 import CropsKnowledge from './components/CropsKnowledge';
 import DiseasesKnowledge from './components/DiseasesKnowledge';
 import Footer from './components/Footer';
 import Header from './components/Header';
 import LivestockKnowledge from './components/LivestockKnowledge';
 import Sidebar from './components/Sidebar';
+import CropDetails from './pages/CropDetails';
 import Dashboard from './pages/Dashboard';
 import Forum from './pages/Forum';
 import Home from './pages/Home';
 import KnowledgeHub from './pages/KnowledgeHub';
+import LivestockDetail from './pages/LivestockDetail';
 import MarketPrices from './pages/MarketPrices';
 import './styles/main.css';
 import Login from './pages/Auth/LoginPage';
 import Register from './pages/Auth/Register';
-import AdminDashboard from './pages/admin/AdminDashboard';
-import AdminFooter from './pages/admin/AdminFooter';
-import AdminHeader from './pages/admin/AdminHeader';
-import AdminSidebar from './pages/admin/AdminSidebar';
-
-
-// ------------------------------
-// Admin layout component
-function AdminLayout({ children }) {
-  return (
-    <div className="d-flex flex-column min-vh-100">
-      <AdminHeader />
-      <div className="d-flex flex-grow-1">
-        <div style={{ width: '220px' }}>
-          <AdminSidebar />
-        </div>
-        <main className="flex-grow-1 p-3">
-          {children}
-        </main>
-      </div>
-      <AdminFooter />
-    </div>
-  );
-}
-
-// ------------------------------
-// Farmer layout component
+// Farmer layout with sidebar, header, footer
 function FarmerLayout() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const toggleSidebar = () => setIsSidebarOpen(prev => !prev);
 
-  // Modal states
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showRegisterModal, setShowRegisterModal] = useState(false);
 
-  // Modal control functions
   const openLoginModal = () => setShowLoginModal(true);
   const closeLoginModal = () => setShowLoginModal(false);
   const openRegisterModal = () => setShowRegisterModal(true);
   const closeRegisterModal = () => setShowRegisterModal(false);
 
-  // After register, switch to login
   const switchToLoginModal = () => {
     setShowRegisterModal(false);
     setTimeout(() => setShowLoginModal(true), 200);
@@ -76,7 +57,6 @@ function FarmerLayout() {
       <Header onToggleSidebar={toggleSidebar} />
 
       <div className="d-flex flex-grow-1">
-        {/* Sidebar */}
         <div
           className={`bg-light border-end transition-width ${
             isSidebarOpen ? 'd-block' : 'd-none'
@@ -95,7 +75,6 @@ function FarmerLayout() {
           />
         </div>
 
-        {/* Main farmer routes */}
         <div className="flex-grow-1 p-3">
           <Routes>
             <Route path="/Dashboard" element={<Navigate to="/farmer" />} />
@@ -109,13 +88,16 @@ function FarmerLayout() {
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/" element={<Home />} />
+            <Route path="/crop/:id" element={<CropDetails />} />
+            <Route path="/Livestock/:id" element={<LivestockDetail />} />
+           
           </Routes>
         </div>
       </div>
 
       <Footer />
 
-      {/* Login/Register Modals */}
+      {/* Modals */}
       <Login show={showLoginModal} onHide={closeLoginModal} />
       <Register
         show={showRegisterModal}
@@ -126,26 +108,30 @@ function FarmerLayout() {
   );
 }
 
-// ------------------------------
-// Main router logic to switch layout
+// Admin layout routing with sidebar + main content
+function AdminRoutes() {
+  return (
+    <Routes>
+      <Route path="/admin" element={<AdminLayout />}>
+        <Route index element={<AdminDashboard />} />
+        <Route path="add-crop" element={<AddCropTechnique />} />
+        <Route path="add-livestock" element={<AddLivestockInfo />} />
+        <Route path="add-pest" element={<AddPestDiseaseControl />} />
+        <Route path="add-training" element={<AddTrainingTutorials />} />
+        <Route path="add-market" element={<AddMarketPrice />} />
+      </Route>
+    </Routes>
+  );
+}
+
+// Main app component decides which layout to show based on route
 function AppContent() {
   const location = useLocation();
   const isAdmin = location.pathname.startsWith('/admin');
 
-  return isAdmin ? (
-    <AdminLayout>
-      <Routes>
-        <Route path="/admin" element={<AdminDashboard />} />
-        {/* Add more admin routes here */}
-      </Routes>
-    </AdminLayout>
-  ) : (
-    <FarmerLayout />
-  );
+  return isAdmin ? <AdminRoutes /> : <FarmerLayout />;
 }
 
-// ------------------------------
-// Root of app
 function App() {
   return (
     <Router>

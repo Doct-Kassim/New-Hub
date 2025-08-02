@@ -1,17 +1,40 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
-import { Card } from 'react-bootstrap';
+import { Container, Card, Row, Col } from 'react-bootstrap';
 
-const CropsKnowledge = () => {
+import { Link } from 'react-router-dom';
+
+const CropKnowledge = () => {
+  const [techniques, setTechniques] = useState([]);
+
+  useEffect(() => {
+    const stored = JSON.parse(localStorage.getItem('cropTechniques')) || [];
+    setTechniques(stored);
+  }, []);
+
   return (
-    <div>
-      <h3>Crops Knowledge</h3>
-      <Card className="p-3 mt-3">
-        <h5>Maize Farming</h5>
-        <p>Learn the best practices for maize cultivation in different climates...</p>
-      </Card>
-    </div>
+    <Container className="mt-4">
+      <h3 className="mb-4">Crop Knowledge</h3>
+      <Row>
+        {techniques.map((tech, index) => (
+          <Col md={6} lg={4} key={index} className="mb-4">
+            <Link to={`/crop/${index}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+              <Card className="h-100">
+                <Card.Img
+                  variant="top"
+                  src={tech.image}
+                  style={{ height: '200px', objectFit: 'cover' }}
+                />
+                <Card.Body>
+                  <Card.Title>{tech.title}</Card.Title>
+                </Card.Body>
+              </Card>
+            </Link>
+          </Col>
+        ))}
+      </Row>
+    </Container>
   );
 };
 
-export default CropsKnowledge;
+export default CropKnowledge;
